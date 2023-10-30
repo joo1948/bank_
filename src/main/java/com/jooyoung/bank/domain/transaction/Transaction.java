@@ -20,8 +20,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Account withdrawAccount; // 출금
-    private Account depositAccount; //입금
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account withdrawAccount;
+
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account depositAccount;
 
     private Long amount; //얼마나 입금이 됐는지 양
 

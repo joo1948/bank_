@@ -7,7 +7,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mm:test;MODE=MySQL
+    url: jdbc:h2:mem:test;MODE=MySQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -15,7 +15,7 @@ spring:
     console:
       enabled: true
   jpa:
-    open-in-view: fasle
+    open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
@@ -24,9 +24,10 @@ spring:
     show-sql: true
   output:
     ansi:
-      enabled: alwyas
+      enabled: always
 
 
 logging:
   level:
     '[com.jooyoung.bank]': DEBUG
+    '[org.hibernate.type]': TRACE
