@@ -1,6 +1,9 @@
 package com.jooyoung.bank.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jooyoung.bank.domain.user.UserEnum;
+import com.jooyoung.bank.dto.ResponseDto;
+import com.jooyoung.bank.util.CustomResponseUtil;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +48,18 @@ public class SecurityConfig {
         //브라우저가 팝업창을 이용해서 사용자 인증을 진행 못하도록 설정
         http.httpBasic().disable();
 
+        //Exception
+        //인증이나 권환에 관련된 내용을 시큐리티가 가져가지 못하고 우리가 가로챌 수 있도록 설정
+        http.exceptionHandling().authenticationEntryPoint((request, response, authException)->{
+
+            CustomResponseUtil.unAuthentication(response, "로그인을 진행해주세요.");
+
+
+        });
 
         http.authorizeHttpRequests()
-                .antMatchers("/api/s/**").authenticated() //주소에 s가 들어오면 인증이 필요
-                .antMatchers("/api/admin/**").hasRole(""+UserEnum.ADMIN) // 주소에 admin이 있는 경우에는 UserEnum.ADMIN인 사용자만 허용
+                .antMatchers("/api/s/**").authenticated() //주소에 s가 들어오면 인증이 필요 >> 401
+                .antMatchers("/api/admin/**").hasRole(""+UserEnum.ADMIN) // 주소에 admin이 있는 경우에는 UserEnum.ADMIN인 사용자만 허용 >> 40
             .anyRequest().permitAll();//나머지 요청은 허용
 
         return http.build();

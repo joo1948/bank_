@@ -69,5 +69,22 @@
    - UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();<br>
      source.registerCorsConfiguration("/**", configuration)
      - 모든 주소에서든 위에 configuration으로 설정한 규칙을 적용할 것
----
+     - 
+3. exceptionHandling().authenticationEntryPoint((request, response, authException)
+   - 인증이나 권한 관련으로 Exception 떨어지는 부분을 Spring Security가 가져가지 않고, 개발자가 가로채어 직접 관리할 수 있도록 설정해주는 것.
+   - Q : 왜 굳이 개발자가 관리하려고 하는건지 ?
+     - A : Web에 보여지는 값과, Post맨에 보여지는 값을 맞춤으로써 통일성을 맞춰주기 위함.
+     - Web : 여러 글자와 함께 HTTP Code , Post맨 : json 
+     - 프론트에 넘겨주는 값을 통일성 있게 넘겨줘야함.
+   - authenticationEntryPoint 타고 들어가보면 commence 메서드의 파라미터가 request, response, authException 이기에 동일하게 맞춰줌.
+     
+    - response.setContentType() : 넘길 값 Type을 통일시킴
+    - response.setStatus() : 넘길 상태값을 통일시킴
+    - response.getWriter().println() : 넘기는 값을 통일시킴
 
+---
+### 여담
+1. CustomResponseUtil의 getLogger()에 getClass()를 왜 넣으면 안되는걸까 ?
+ -> unAutentication 메서드가 static으로 되어 있고, 해당 메서드가 log를 사용하기에 Logger에도 static이 붙어야 한다.
+ -> static은 Main 이 로드되기 전에 메모리에 올라오는 구조이기에, getClass()를 사용할 수 없다. 
+ -> 따라서 해당 클래스를 직접 선언해줘야 한다. => CustomResponseUtil.class 
